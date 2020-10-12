@@ -91,13 +91,102 @@ class SortingRobot:
         Returns True if the robot's light is on and False otherwise.
         """
         return self._light == "ON"
+    
+#'''
+#UPER
+#Understand
+# Sort of like insertion sort?
+#
+#- ALL: can_move_right, can_move_left, move_right, move_left, swap_item, compare_item, light on, light off, light indicator
+#-----KEY-----
+#- can_move_right --> true if can move right, false at end of list
+#- can_move_left --> true if can move left, false if at start of list
+#- move_right --> if it can, moves to the right and returns True, else stays in place and returns False
+#- move_left --> if it can, moves to the left and returns True, else stays in place and returns False
+#- swap_item --> swaps currently held with ***** list item in FRONT of it *****
+#- compare_item --> compare held with item in front, if > return 1, if < return -1, if = return 0, if either is None, return None
+#- set_light_on --> turn on robots light
+#- ser_light_off --> turn off robots light
+#- light_is_on --> True if on, False otherwise
+#
+#Plan
+#- Robot should be able to travel one way down the list
+#- while it can move left let it, compare & swap items out along the way
+#- while it can move right let it, compare & swap items out along the way.
+#- we can use the robot light to encompass the entire loop
+#
+#'''
 
     def sort(self):
         """
         Sort the robot's list.
         """
-        # Fill this out
-        pass
+        
+        # while light is not on, turn it on
+        while not self.light_is_on():
+            self.set_light_on()
+            
+            # lets go from left to right
+            while self.can_move_right():
+                # swap current with one in FRONT
+                self.swap_item()
+                # move right or stay in place
+                self.move_right()
+                
+                # if compared item is greater than current, swap item
+                if self.compare_item() == 1:
+                    self.swap_item()
+                    # turn light off to indicate False 
+                    self.set_light_off()
+                
+                # check both sides of current
+                # if it can move left and swap items, do it, else stay in place
+                self.move_left()
+                # swap item in FRONT of current
+                self.swap_item()
+                # if it can move right, it will, else it will stay in place
+                self.move_right()
+            
+            # while loop for moving left now
+            while self.can_move_left():
+                # swap current with one in FRONT
+                self.swap_item()
+                # move Left or stay in place
+                self.move_left()
+                
+                # if compared item is less than current, swap item
+                if self.compare_item() == -1:
+                    # swap with one in Front
+                    self.swap_item()
+                    # turn light off to indicate False
+                    self.set_light_off()
+                
+                # check both sides again
+                # if move right it will, else it'll stay in place
+                self.move_right()
+                # swap item in front
+                self.swap_item()
+                # move left, else stay in place
+                self.move_left()
+
+# trying to optimize for time
+    def sort_2(self):
+        while not self.light_is_on():
+            self.set_light_on()
+
+            while self.can_move_right():
+                if self.compare_item() == 1:
+                    self.move_right()
+                    self.swap_item()
+                    self.set_light_off()
+                
+            while self.can_move_left():
+                if self.compare_item() == -1:
+                    self.move_left()
+                    self.swap_item()
+                    self.set_light_off()
+
+
 
 
 if __name__ == "__main__":
@@ -108,5 +197,5 @@ if __name__ == "__main__":
 
     robot = SortingRobot(l)
 
-    robot.sort()
+    robot.sort_2()
     print(robot._list)
