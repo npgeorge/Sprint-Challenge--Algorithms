@@ -117,84 +117,99 @@ class SortingRobot:
 #
 #'''
 
-    def sort(self):
-        """
-        Sort the robot's list.
-        """
-        
-        # while light is not on, turn it on
-        while not self.light_is_on():
-            self.set_light_on()
-            
-            # lets go from left to right
-            while self.can_move_right():
-                # swap current with one in FRONT
-                self.swap_item()
-                # move right or stay in place
-                self.move_right()
-                
-                # if compared item is greater than current, swap item
-                if self.compare_item() == 1:
-                    self.swap_item()
-                    # turn light off to indicate False 
-                    self.set_light_off()
-                
-                # check both sides of current
-                # if it can move left and swap items, do it, else stay in place
-                self.move_left()
-                # swap item in FRONT of current
-                self.swap_item()
-                # if it can move right, it will, else it will stay in place
-                self.move_right()
-            
-            # while loop for moving left now
-            while self.can_move_left():
-                # swap current with one in FRONT
-                self.swap_item()
-                # move Left or stay in place
-                self.move_left()
-                
-                # if compared item is less than current, swap item
-                if self.compare_item() == -1:
-                    # swap with one in Front
-                    self.swap_item()
-                    # turn light off to indicate False
-                    self.set_light_off()
-                
-                # check both sides again
-                # if move right it will, else it'll stay in place
-                self.move_right()
-                # swap item in front
-                self.swap_item()
-                # move left, else stay in place
-                self.move_left()
-
 # trying to optimize for time
-    def sort_2(self):
-        while not self.light_is_on():
-            self.set_light_on()
+    def sort(self):
+        '''
+        l = [4,17,8,10]
 
+        understand current position
+        understand current item
+        compare current item to item in front (next item)
+        for i in l:
+            if current item is less than next item, do nothing
+            elif current item is greater than next item, swap & move right
+            elif current item is equal to next item, move right
+            elif current item is None, move right
+            else we are at the end of the list, traverse back from end of list to beginning
+
+        '''
+
+        # understand current position
+        print("List to sort: ", l,
+        "\nLength of list: ", (len(l)-1),
+        "\nCurrent position: ", self._position, 
+        "\nCan we move right? ", self.can_move_right(),
+        "\nCan we move left?", self.can_move_left(),
+        "\nCurrent value: ", self._item,
+        "\nComparing next item: ", self.compare_item()
+        )
+        while self.can_move_right():
+            self.swap_item()
             while self.can_move_right():
+                # exits while loop when we can't move right any longer
+                #pick up first item, begins with "None"
+                self.move_right()
                 if self.compare_item() == 1:
-                    self.move_right()
+                    print('Swapped going from left right...')
+                    y = self._item
+                    print("Current value: ", y)
                     self.swap_item()
-                    self.set_light_off()
-                
+                    print("Compared ", y, " to ", self._item, "...")
+
+                #if self.compare_item() == 1:
+                #    print('Swapped going from left right...')
+                #    y = self._item
+                #    print("Current value: ", y)
+                #    self.swap_item()
+                #    print("Compared ", y, " to ", self._item, "...")
+#
+                #if self.can_move_right() == False:
+                #    self.swap_item()
+
+                #self.move_right()
+
+                #print("----------------",
+                #"\nList to sort: ", l,
+                #"\nLength of list: ", (len(l)-1),
+                #"\nCurrent position: ", self._position, 
+                #"\nCan we move right? ", self.can_move_right(),
+                #"\nCan we move left?", self.can_move_left(),
+                #"\nCurrent value: ", self._item,
+                #"\nComparing next item... ", self.compare_item()
+                #)
+
             while self.can_move_left():
-                if self.compare_item() == -1:
-                    self.move_left()
+                self.move_left()
+                if self.compare_item() == None:
+                    print('Swapped coming back...')
+                    x = self._item
+                    print("Current value: ", x)
                     self.swap_item()
-                    self.set_light_off()
+                    print("Swapped ", x, " for ", self._item, "...")
+                    break
 
+                if self.can_move_left() == False:
+                    self.swap_item()
 
-
+            self.move_right()
+        
+        print("-------FINAL SORT---------",
+            #"\nList to sort: ", l,
+            "\nLength of list: ", (len(l)-1),
+            "\nCurrent position: ", self._position, 
+            "\nCan we move right? ", self.can_move_right(),
+            "\nCan we move left?", self.can_move_left(),
+            "\nCurrent value: ", self._item,
+            "\nComparing next item... ", self.compare_item()
+            )
+                
 
 if __name__ == "__main__":
     # Test our your implementation from the command line
     # with `python robot_sort.py`
 
     l = [15, 41, 58, 49, 26, 4, 28, 8, 61, 60, 65, 21, 78, 14, 35, 90, 54, 5, 0, 87, 82, 96, 43, 92, 62, 97, 69, 94, 99, 93, 76, 47, 2, 88, 51, 40, 95, 6, 23, 81, 30, 19, 25, 91, 18, 68, 71, 9, 66, 1, 45, 33, 3, 72, 16, 85, 27, 59, 64, 39, 32, 24, 38, 84, 44, 80, 11, 73, 42, 20, 10, 29, 22, 98, 17, 48, 52, 67, 53, 74, 77, 37, 63, 31, 7, 75, 36, 89, 70, 34, 79, 83, 13, 57, 86, 12, 56, 50, 55, 46]
-
+    #l = [4,17,8,10,3]
     robot = SortingRobot(l)
 
     robot.sort_2()
